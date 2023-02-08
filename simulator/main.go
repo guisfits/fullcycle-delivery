@@ -1,9 +1,11 @@
 package main
 
 import (
+	"fmt"
+	"log"
+	ckafka "github.com/confluentinc/confluent-kafka-go/kafka"
 	"github.com/guisfits/fullcycle/infra/kafka"
 	"github.com/joho/godotenv"
-	"log"
 )
 
 func init() {
@@ -14,10 +16,12 @@ func init() {
 }
 
 func main() {
-	producer := kafka.NewKafkaProducer()
-	kafka.Publish("ola", "route.new-direction", producer)
+	msgChan := make(chan *ckafka.Message)
+	consumer := kafka.NewKafkaConsumer(msgChan)
 
-	for {
-		_ = 1
+	go consumer.Consume()
+
+	for msg := range msgChan {
+		fmt.Println(string(msg.Value))
 	}
 }
