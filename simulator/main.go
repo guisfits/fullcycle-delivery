@@ -1,9 +1,9 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	ckafka "github.com/confluentinc/confluent-kafka-go/kafka"
+	kafka2 "github.com/guisfits/fullcycle/application/kafka"
 	"github.com/guisfits/fullcycle/infra/kafka"
 	"github.com/joho/godotenv"
 )
@@ -22,6 +22,6 @@ func main() {
 	go consumer.Consume()
 
 	for msg := range msgChan {
-		fmt.Println(string(msg.Value))
+		go kafka2.Produce(msg)
 	}
 }
