@@ -1,19 +1,23 @@
 package main
 
 import (
-	"fmt"
-	"github.com/guisfits/fullcycle/applicatiion/route"
+	"github.com/guisfits/fullcycle/infra/kafka"
+	"github.com/joho/godotenv"
+	"log"
 )
 
+func init() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("error loading .env file")
+	}
+}
 
 func main() {
-	route := route.Route{
-		ID:	"1",
-		ClientID: "1",
+	producer := kafka.NewKafkaProducer()
+	kafka.Publish("ola", "route.new-direction", producer)
+
+	for {
+		_ = 1
 	}
-
-	route.LoadPositions()
-	result, _ := route.ExportJsonPositions()
-
-	fmt.Println(result[1])
 }
